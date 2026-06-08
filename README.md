@@ -30,5 +30,6 @@ Le projet est construit de manière modulaire en respectant une stricte séparat
   * Optimisation des performances via des structures de cache en mémoire (`Map`).
 * **API :** Consommation de l'API REST et du point d'accès GraphQL de [PokéAPI](https://pokeapi.co/).
 
-
+Jouable sous cette Url :
+https://ahmed-muhammad7.github.io/Pokedle/
 
