@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokémondle — Devine le Pokémon du jour</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+<header class="game-header">
+    <div class="header-decoration header-decoration--left" aria-hidden="true"></div>
+    <div class="header-title-block">
+        <h1 class="game-title">Pokémondle</h1>
+        <p class="game-subtitle">Devine le Pokémon du jour !</p>
+    </div>
+    <div class="header-decoration header-decoration--right" aria-hidden="true"></div>
+</header>
+
+<main class="game-container" id="game-container">
+
+    <section class="search-panel" aria-label="Zone de recherche">
+        <div class="search-wrapper">
+            <label for="pokemon-input" class="search-label">Devinez :</label>
+            <div class="autocomplete-container">
+                <input
+                        type="text"
+                        id="pokemon-input"
+                        class="search-input"
+                        placeholder="Ex: Pikachu..."
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        aria-controls="autocomplete-list"
+                        aria-expanded="false"
+                />
+                <ul
+                        id="autocomplete-list"
+                        class="autocomplete-list"
+                        role="listbox"
+                        aria-label="Suggestions de Pokémon"
+                        hidden
+                ></ul>
+            </div>
+            <button id="guess-btn" class="btn-guess" type="button" disabled>
+                Valider
+            </button>
+        </div>
+
+        <div class="attempts-counter" aria-live="polite" aria-atomic="true">
+            <span id="attempts-count">0</span>
+            <span class="attempts-label">essai(s)</span>
+        </div>
+    </section>
+
+    <div id="hint-btn-container" hidden style="text-align: center; margin-bottom: 0.5rem;">
+        <button id="hint-btn" class="btn-share" type="button">
+            💡 Débloquer l'indice
+        </button>
+    </div>
+
+    <div id="hint-banner" class="hint-banner" hidden aria-live="polite">
+        <span class="hint-icon" aria-hidden="true">💡</span>
+        <span id="hint-text"></span>
+    </div>
+
+    <div id="result-banner" class="result-banner" hidden aria-live="assertive">
+        <p id="result-text"></p>
+        <button id="result-share-btn" class="btn-share" type="button" hidden>
+            Partager 📋
+        </button>
+    </div>
+
+    <section class="guesses-section" aria-label="Tableau des essais">
+
+        <div class="guess-row guess-row--header" role="row" aria-label="En-tête des colonnes">
+            <div class="cell cell--header" role="columnheader">Pokémon</div>
+            <div class="cell cell--header" role="columnheader">Type 1</div>
+            <div class="cell cell--header" role="columnheader">Type 2</div>
+            <div class="cell cell--header" role="columnheader">Stade évol.</div>
+            <div class="cell cell--header" role="columnheader">Entièrement évolué</div>
+            <div class="cell cell--header" role="columnheader">Poids (kg)</div>
+            <div class="cell cell--header" role="columnheader">Taille (m)</div>
+            <div class="cell cell--header" role="columnheader">Couleur</div>
+            <div class="cell cell--header" role="columnheader">Gén.</div>
+        </div>
+
+        <div id="guesses-list" role="table" aria-label="Historique des essais"></div>
+
+    </section>
+
+    <div id="loading-indicator" class="loading-indicator" hidden aria-live="polite">
+        <span class="loading-pokeball" aria-hidden="true"></span>
+        <span>Chargement...</span>
+    </div>
+
+</main>
+
+<footer class="game-footer">
+    <p>Données : <a href="https://pokeapi.co" target="_blank" rel="noopener">PokéAPI</a></p>
+    <p style="font-size: 0.75rem; margin-top: 0.8rem; opacity: 0.7; line-height: 1.4;">
+        Pokémon et les noms de personnages sont des marques déposées de Nintendo.<br>
+        © 1995–2026 Nintendo / Creatures Inc. / GAME FREAK inc.<br>
+        Ce jeu est un projet éducatif non commercial et n'est pas affilié à Nintendo.
+    </p>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

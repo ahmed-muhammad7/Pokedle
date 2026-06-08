@@ -1,0 +1,736 @@
+/* ============================================================
+   POKÉMONDLE — style.css
+   Thème : Gameboy Advance / DS rétro
+   Police titre  : Press Start 2P (pixel-art)
+   Police données : VT323 (lecture facile, style rétro)
+   Auteur : BUT Informatique 1ère année
+============================================================ */
+
+/* ============================================================
+   1. VARIABLES CSS (THÈME)
+   Centralise toutes les couleurs et mesures pour faciliter
+   la maintenance et le changement de thème.
+============================================================ */
+:root {
+    /* Palette principale */
+    --color-bg:            #1a1f3c;       /* Fond général : bleu nuit profond */
+    --color-bg-alt:        #252b52;       /* Fond secondaire légèrement plus clair */
+    --color-panel:         #3a7bd5;       /* Bleu GBA pour les panneaux */
+    --color-panel-dark:    #2a5ba5;       /* Bleu foncé (bordures, ombres) */
+    --color-panel-light:   #5a9bf5;       /* Bleu clair (reflets, highlights) */
+
+    /* Couleurs de feedback */
+    --color-correct:       #27ae60;       /* Vert : réponse correcte */
+    --color-correct-light: #2ecc71;       /* Vert clair pour le dégradé */
+    --color-wrong:         #e74c3c;       /* Rouge : mauvaise réponse */
+    --color-wrong-light:   #ff6b6b;       /* Rouge clair pour le dégradé */
+
+    /* Typographie */
+    --font-title:          'Press Start 2P', monospace;
+    --font-body:           'VT323', monospace;
+
+    /* Tailles de police */
+    --fs-title:            1.4rem;
+    --fs-subtitle:         0.55rem;
+    --fs-cell:             1.1rem;
+    --fs-header-cell:      0.65rem;
+    --fs-label:            0.75rem;
+
+    /* Dimensions des cellules (grille de 9 colonnes) */
+    --cell-size:           90px;
+    --cell-radius:         12px;
+    --cell-gap:            6px;
+
+    /* Durées d'animation */
+    --flip-duration:       0.5s;
+    --flip-stagger:        0.1s;    /* délai entre chaque cellule */
+
+    /* Ombres portées */
+    --shadow-panel:        0 4px 0 var(--color-panel-dark), 0 8px 24px rgba(0,0,0,0.5);
+    --shadow-cell:         0 3px 0 rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+    --shadow-btn:          0 4px 0 #1a4a8a, 0 6px 16px rgba(0,0,0,0.4);
+
+    /* Bordures */
+    --border-panel:        3px solid var(--color-panel-light);
+    --border-screen:       4px solid #8ba0c0;
+}
+
+/* ============================================================
+   2. RESET & BASE
+============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--color-bg);
+    /* Motif de points pixel-art en arrière-plan */
+    background-image:
+            radial-gradient(circle at 1px 1px, rgba(90,155,245,0.15) 1px, transparent 0);
+    background-size: 24px 24px;
+    color: #ffffff;
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2rem;
+}
+
+/* ============================================================
+   3. EN-TÊTE (HEADER)
+============================================================ */
+.game-header {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem 1rem 1.5rem;
+    position: relative;
+}
+
+/* Décorations en étoile pixel-art (pseudo-éléments) */
+.header-decoration {
+    flex: 1;
+    height: 4px;
+    background: linear-gradient(90deg,
+    transparent,
+    var(--color-panel-light) 30%,
+    var(--color-panel) 70%,
+    transparent
+    );
+    border-radius: 2px;
+    opacity: 0.7;
+}
+
+.header-decoration--right {
+    transform: scaleX(-1);
+}
+
+.header-title-block {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.game-title {
+    font-family: var(--font-title);
+    font-size: var(--fs-title);
+    color: #ffffff;
+    /* Effet "écran rétro" avec ombre multi-couche */
+    text-shadow:
+            2px 2px 0 var(--color-panel-dark),
+            4px 4px 0 #1a3a6a,
+            0 0 20px rgba(90,155,245,0.5);
+    letter-spacing: 2px;
+    line-height: 1.4;
+}
+
+.game-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: var(--color-panel-light);
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   4. CONTENEUR PRINCIPAL
+============================================================ */
+.game-container {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+/* ============================================================
+   5. PANNEAU DE RECHERCHE
+============================================================ */
+.search-panel {
+    width: 100%;
+    background: var(--color-panel);
+    border: var(--border-panel);
+    border-radius: 16px;
+    box-shadow: var(--shadow-panel);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.search-label {
+    font-family: var(--font-title);
+    font-size: var(--fs-label);
+    color: #ffffff;
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 var(--color-panel-dark);
+}
+
+/* Conteneur de l'input + liste déroulante */
+.autocomplete-container {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    color: #1a1f3c;
+    background: #e8f0fe;
+    border: 3px solid var(--color-panel-dark);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    /* Curseur clignotant pixel style */
+    caret-color: var(--color-panel-dark);
+}
+
+.search-input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+}
+
+.search-input::placeholder {
+    color: #7a8ab0;
+    font-style: italic;
+}
+
+/* ---- Bouton Valider ---- */
+.btn-guess {
+    font-family: var(--font-title);
+    font-size: 0.6rem;
+    color: #ffffff;
+    background: linear-gradient(180deg, #27ae60, #1e8449);
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #145a32, 0 6px 16px rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+.btn-guess:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #145a32, 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.btn-guess:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #145a32;
+}
+
+.btn-guess:disabled {
+    background: linear-gradient(180deg, #5a6a5a, #3a4a3a);
+    box-shadow: 0 3px 0 #1a2a1a;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ---- Compteur d'essais ---- */
+.attempts-counter {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 1px;
+    display: flex;
+    gap: 0.4rem;
+    align-items: baseline;
+}
+
+#attempts-count {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.attempts-label {
+    font-size: 1rem;
+}
+
+/* ============================================================
+   6. LISTE D'AUTOCOMPLÉTION
+============================================================ */
+.autocomplete-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background: #e8f0fe;
+    border: 3px solid var(--color-panel-dark);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    list-style: none;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.autocomplete-list[hidden] {
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 0.55rem 1rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: #1a1f3c;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(58,123,213,0.2);
+    transition: background 0.15s;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item[aria-selected="true"] {
+    background: #c8d8f8;
+}
+
+.autocomplete-item img {
+    width: 28px;
+    height: 28px;
+    image-rendering: pixelated; /* rendu pixel-art pour les sprites */
+}
+
+/* ============================================================
+   7. BANDEAUX (INDICE & RÉSULTAT)
+============================================================ */
+.hint-banner {
+    width: 100%;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    border: 3px solid #d35400;
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 0 #a04000, 0 6px 16px rgba(0,0,0,0.3);
+    animation: slideDown 0.4s ease;
+}
+
+.hint-banner[hidden] {
+    display: none;
+}
+
+.hint-icon {
+    font-size: 1.4rem;
+}
+
+.result-banner {
+    width: 100%;
+    text-align: center;
+    background: var(--color-panel-dark);
+    border: var(--border-panel);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-panel);
+    animation: slideDown 0.5s ease;
+}
+
+.result-banner[hidden] {
+    display: none;
+}
+
+#result-text {
+    font-family: var(--font-title);
+    font-size: 0.7rem;
+    color: #ffffff;
+    line-height: 2;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+
+.btn-share {
+    margin-top: 0.75rem;
+    font-family: var(--font-title);
+    font-size: 0.55rem;
+    color: #1a1f3c;
+    background: linear-gradient(180deg, #f9ca24, #f0932b);
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #b06000, 0 5px 12px rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+    letter-spacing: 1px;
+}
+
+.btn-share[hidden] {
+    display: none;
+}
+
+.btn-share:hover {
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   8. TABLEAU DES ESSAIS — GRILLE DE 9 COLONNES
+============================================================ */
+.guesses-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cell-gap);
+}
+
+/* Une ligne = 9 cellules en grille */
+.guess-row {
+    display: grid;
+    /* 9 colonnes : sprite + 8 attributs.
+       La 1ère colonne (sprite) est légèrement plus large. */
+    grid-template-columns: var(--cell-size) repeat(8, 1fr);
+    gap: var(--cell-gap);
+    align-items: center;
+}
+
+/* ---- Cellule d'en-tête ---- */
+.cell--header {
+    font-family: var(--font-title);
+    font-size: var(--fs-header-cell);
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+
+/* ---- Cellule générique ---- */
+.cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--cell-size);
+    border-radius: var(--cell-radius);
+    padding: 0.4rem 0.3rem;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: var(--fs-cell);
+    font-weight: 400;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+    /* Perspective pour l'animation 3D */
+    perspective: 600px;
+}
+
+/* ---- Cellule sprite (colonne 1) ---- */
+.cell--sprite {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.cell--sprite img {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.4));
+}
+
+/* ============================================================
+   9. ANIMATION FLIP 3D DES CELLULES
+   Chaque .cell-inner fait un flip horizontal.
+   La face avant (before) = gris neutre pendant le flip.
+   La face arrière (after) = couleur correcte/mauvaise.
+============================================================ */
+.cell-flipper {
+    width: 100%;
+    height: 100%;
+    min-height: var(--cell-size);
+    position: relative;
+    transform-style: preserve-3d;
+    /* L'animation flip est ajoutée via JS avec un délai calculé */
+    border-radius: var(--cell-radius);
+}
+
+/* Face avant : couleur neutre avant révélation */
+.cell-front,
+.cell-back {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--cell-radius);
+    backface-visibility: hidden;         /* cache la face non visible */
+    -webkit-backface-visibility: hidden;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.4rem 0.3rem;
+    text-align: center;
+}
+
+.cell-front {
+    background: linear-gradient(160deg, #3a5a8a, #2a4a7a);
+    box-shadow: var(--shadow-cell);
+    border: 2px solid rgba(255,255,255,0.15);
+    font-family: var(--font-body);
+    font-size: var(--fs-cell);
+    color: rgba(255,255,255,0.5);
+}
+
+.cell-back {
+    /* La couleur sera surchargée par .cell-back--correct / --wrong */
+    transform: rotateY(180deg);         /* cachée au départ, révélée après flip */
+    font-family: var(--font-body);
+    font-size: var(--fs-cell);
+    color: #ffffff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+}
+
+/* ---- Couleurs des faces arrière ---- */
+.cell-back--correct {
+    background: linear-gradient(160deg, var(--color-correct-light), var(--color-correct));
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: var(--shadow-cell), 0 0 12px rgba(39,174,96,0.4);
+}
+
+.cell-back--wrong {
+    background: linear-gradient(160deg, var(--color-wrong-light), var(--color-wrong));
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: var(--shadow-cell);
+}
+
+/* ---- Keyframe du flip ---- */
+@keyframes flipCell {
+    0%   { transform: rotateY(0deg); }
+    50%  { transform: rotateY(90deg); }    /* moment de bascule */
+    100% { transform: rotateY(180deg); }
+}
+
+/* Classe ajoutée par JS pour déclencher l'animation */
+.cell-flipper.flipping {
+    animation: flipCell var(--flip-duration) ease-in-out forwards;
+}
+
+/* ---- Flèche directionnelle (poids, taille, génération) ---- */
+.direction-arrow {
+    font-size: 1.3rem;
+    line-height: 1;
+    display: block;
+}
+
+/* ============================================================
+   10. INDICATEUR DE CHARGEMENT (POKÉBALL)
+============================================================ */
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    color: var(--color-panel-light);
+    padding: 1rem;
+}
+
+.loading-indicator[hidden] {
+    display: none;
+}
+
+/* Pokéball animée en CSS pur */
+.loading-pokeball {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    /* Moitié rouge / moitié blanche séparée par une bande noire */
+    background:
+            linear-gradient(to bottom, #e74c3c 50%, #ffffff 50%);
+    border: 3px solid #2c2c2c;
+    position: relative;
+    animation: spinBall 0.8s linear infinite;
+}
+
+/* Bande centrale + bouton central */
+.loading-pokeball::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #2c2c2c;
+    transform: translateY(-50%);
+}
+
+.loading-pokeball::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #2c2c2c;
+    z-index: 1;
+}
+
+@keyframes spinBall {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   11. ANIMATIONS DIVERSES
+============================================================ */
+
+/* Apparition par le haut */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apparition d'une nouvelle ligne d'essai */
+@keyframes rowAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.guess-row--attempt {
+    animation: rowAppear 0.3s ease forwards;
+}
+
+/* Shake pour signaler une erreur de saisie */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-8px); }
+    40%       { transform: translateX(8px); }
+    60%       { transform: translateX(-5px); }
+    80%       { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.4s ease;
+}
+
+/* Pulse victoire */
+@keyframes victoryPulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.04); }
+}
+
+.victory {
+    animation: victoryPulse 0.6s ease 3;
+}
+
+/* ============================================================
+   12. PIED DE PAGE
+============================================================ */
+.game-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+}
+
+.game-footer a {
+    color: var(--color-panel-light);
+    text-decoration: none;
+}
+
+.game-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   13. SCROLLBAR PERSONNALISÉE (navigateurs Webkit)
+============================================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-alt);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-panel);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-panel-light);
+}
+
+/* ============================================================
+   14. RESPONSIVE — PETITS ÉCRANS
+   Sur mobile, les cellules rétrécissent pour tenir en largeur.
+============================================================ */
+@media (max-width: 720px) {
+    :root {
+        --cell-size:       62px;
+        --fs-title:        0.9rem;
+        --fs-cell:         0.85rem;
+        --fs-header-cell:  0.45rem;
+        --cell-gap:        4px;
+    }
+
+    .search-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-guess {
+        width: 100%;
+        font-size: 0.55rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --cell-size:       48px;
+        --fs-cell:         0.72rem;
+        --fs-header-cell:  0.38rem;
+        --cell-gap:        3px;
+    }
+
+    .game-title {
+        font-size: 1rem;
+    }
+}
